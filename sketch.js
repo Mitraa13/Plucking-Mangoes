@@ -5,19 +5,24 @@ const Bodies = Matter.Bodies;
 const Body = Matter.Body;
 const Render = Matter.Render;
 const Constraint=Matter.Constraint;
+
 var treeObj, stone,groundObject, chain;
+var lb,tb;
 var mango1,mango2,mango3,mango4,mango5,mango6,mango7,mango8,mango9,mango10,mango11,mango12;
-var world,boy;
+var world,boy,backgroundImg;
+
 var launchingForce=100;
 
 function preload(){
-	boy=loadImage("images/boy.png");
+  boy=loadImage("images/boy.png");  
   }
 
 function setup() {
 	createCanvas(1300, 600);
 	engine = Engine.create();
-	world = engine.world;
+  world = engine.world;
+  
+	Engine.run(engine);
 
 	stone=new Stone(235,420,30); 
 
@@ -35,42 +40,43 @@ function setup() {
 	mango12=new mango(900,160,40);
 
 	treeObj=new tree(1050,580);
-	groundObject=new ground(width/2,600,width,20);
-	chain=new SlingShot(stone.body,{x:235,y:420})
- 
+	groundObject=new Ground(width/2,600,width,50);
+  lb = new Ground(1300,height/2,10,height);
+  tb = new Ground(width/2,0,width,10);
+  chain=new SlingShot(stone.body,{x:240,y:450});  
 	
-	Engine.run(engine);
- // Render.run(render);
 }
 
 function draw() {
 
-  background(230);
-  //frameRate(2)
- // Engine.update(engine)
+  background("lightblue");
+
   textSize(25);
   text("Press Space to get a second Chance to Play!!",50 ,50);
-  image(boy ,200,340,200,300);
-  //Engine.update(engine)
+  Engine.update(engine);
   
 
   treeObj.display();
-  stone.display();
   mango1.display();
   mango2.display();
   mango3.display();
   mango4.display();
   mango6.display();
- mango7.display();
+  mango7.display();
   mango8.display();
   mango9.display();
   mango10.display();
   mango11.display();
   mango12.display();
-  stone.display();
 
+  stone.display();
   groundObject.display();
+  lb.display();
+  tb.display();
+
+  image(boy ,200,340+30,200,300);
   chain.display();
+
   detectollision(stone,mango1);
   detectollision(stone,mango2);
   detectollision(stone,mango3);
@@ -93,7 +99,6 @@ function mouseDragged()
 function mouseReleased()
 {
 	chain.fly();
-    // distance=int(dist(stoneObj.x,stoneObj.y,mango1.x,mango1.y));
 }
 
 function keyPressed() {
@@ -104,19 +109,13 @@ function keyPressed() {
   }
 
   function detectollision(lstone,lmango){
-	/*var collision = Matter.SAT.collides(lstone,lmango);
-	if(collision.collided){
-		console.log("collided");
-		Matter.Body.setStatic(lmango,false);	
-	}*/
   mangoBodyPosition=lmango.body.position
   stoneBodyPosition=lstone.body.position
   
   var distance=dist(stoneBodyPosition.x, stoneBodyPosition.y, mangoBodyPosition.x, mangoBodyPosition.y)
   
   	if(distance<=lmango.r+lstone.r)
-    {
-      
+    {      
   	  Matter.Body.setStatic(lmango.body,false);
     }
 
